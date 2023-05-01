@@ -11,10 +11,10 @@ const Sidebar = () => {
     return (
         <div className='sidebar'>
             <div className="sidebarLeft">
-                <div className="serverIcon">
-                    <img src="./logo192.png" alt="" />
+                <div className="sidebarIcon">
+                    <img src="./discordIcon.png" alt="" />
                 </div>
-                <div className="serverIcon">
+                <div className="sidebarIcon">
                     <img src="./logo192.png" alt="" />
                 </div>
             </div>
