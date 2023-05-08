@@ -5,6 +5,8 @@ import Login from './components/login/Login';
 import './App.scss';
 import './components/login/Login.scss'
 import { useAppSelector } from './app/hooks';
+import { ErrorBoundary } from 'react-error-boundary';
+import { ErrorFallBack } from "./utils/ErrorFallBack"
 
 function App() {
 
@@ -14,7 +16,9 @@ function App() {
     <div className="App">
       {user ? (
         <>
-          <Sidebar />
+          <ErrorBoundary FallbackComponent={ErrorFallBack}>
+            <Sidebar />
+          </ErrorBoundary>
           <Chat />
         </>
       ) : <><Login /></>}
