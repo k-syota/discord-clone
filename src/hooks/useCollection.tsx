@@ -9,7 +9,7 @@ interface Channels {
 const useCollection = (data: string) => {
 
     const [documents, setDocuments] = useState<Channels[]>([])
-    const collectionRef: Query<DocumentData> = query(collection(db, "data"))
+    const collectionRef: Query<DocumentData> = query(collection(db, data))
 
     useEffect(() => {
         onSnapshot(collectionRef, (query) => {
