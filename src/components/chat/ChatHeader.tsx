@@ -1,13 +1,18 @@
 import React from 'react'
 import { Help, Notifications, PeopleAlt, PushPin, Search, Send } from '@mui/icons-material';
 
-const ChatHeader = () => {
+type props = {
+    channelName: string | null
+}
+
+const ChatHeader = (props: props) => {
+    const { channelName } = props;
     return (
         <div className='chatHeader'>
             <div className="chatHeaderLeft">
                 <h3>
                     <span className='chatHeaderHash'>#</span>
-                    Test
+                    {channelName}
                 </h3>
             </div>
 
