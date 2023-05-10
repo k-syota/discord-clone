@@ -6,12 +6,24 @@ import './ChatHeader.scss'
 import './ChatMessage.scss'
 import { AddCircleOutline, CardGiftcard, EmojiEmotions, Gif } from '@mui/icons-material'
 import { useAppSelector } from '../../app/hooks'
+import { CollectionReference, DocumentData, addDoc, collection, serverTimestamp } from 'firebase/firestore'
+import { db } from '../../firebase'
 
 const Chat = () => {
+
     const [text, setText] = useState('')
     const channelName = useAppSelector((state) => state.channel.channelName)
-    const sendMessage = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const channelId = useAppSelector((state) => state.channel.channelId)
+    const user = useAppSelector((state) => state.user.user)
+
+    const sendMessage = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
+        const collectionRef: CollectionReference<DocumentData> = collection(db, "channels", String(channelId), "messages")
+        await addDoc(collectionRef, {
+            'messages': text,
+            timestamp: serverTimestamp(),
+            user: user
+        })
     }
     return (
         <div className='chat'>
