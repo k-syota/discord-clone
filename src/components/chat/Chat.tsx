@@ -6,7 +6,7 @@ import './ChatHeader.scss'
 import './ChatMessage.scss'
 import { AddCircleOutline, CardGiftcard, EmojiEmotions, Gif } from '@mui/icons-material'
 import { useAppSelector } from '../../app/hooks'
-import { Timestamp, CollectionReference, DocumentData, addDoc, collection, onSnapshot, serverTimestamp } from 'firebase/firestore'
+import { Timestamp, CollectionReference, DocumentData, addDoc, collection, onSnapshot, serverTimestamp, query, orderBy } from 'firebase/firestore'
 import { db } from '../../firebase'
 
 interface Messages {
@@ -30,7 +30,9 @@ const Chat = () => {
 
     useEffect(() => {
         const collectionRef: CollectionReference<DocumentData> = collection(db, "channels", String(channelId), "messages")
-        onSnapshot(collectionRef, (snapshot) => {
+        //timestampでsortしたデータを変数に格納
+        const collectionRefOrderBy = query(collectionRef, orderBy("timestamp", "desc"))
+        onSnapshot(collectionRefOrderBy, (snapshot) => {
             let res: Messages[] = [];
             snapshot.docs.forEach((doc) => {
                 res.push({
@@ -43,8 +45,6 @@ const Chat = () => {
         })
     }, [channelId])
 
-    console.log(messages)
-
     const sendMessage = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
         const collectionRef: CollectionReference<DocumentData> = collection(db, "channels", String(channelId), "messages")
@@ -53,6 +53,7 @@ const Chat = () => {
             timestamp: serverTimestamp(),
             user: user
         })
+        setText('')
     }
     return (
         <div className='chat'>
@@ -65,7 +66,7 @@ const Chat = () => {
             <div className="chatInput">
                 <AddCircleOutline />
                 <form>
-                    <input type="text" placeholder='Testへ送信' onChange={(e: React.ChangeEvent<HTMLInputElement>) => setText(e.target.value)} />
+                    <input type="text" placeholder='Testへ送信' onChange={(e: React.ChangeEvent<HTMLInputElement>) => setText(e.target.value)} value={text} />
                     <button type="submit" className='chatInputButton' onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => sendMessage(e)}></button>
                 </form>
                 <div className="chatInputIcons">

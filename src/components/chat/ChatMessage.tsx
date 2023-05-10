@@ -15,8 +15,6 @@ type Props = {
 
 const ChatMessage = (props: Props) => {
 
-    console.log(props)
-
     const { message, timestamp, user } = props
 
     return (
