@@ -8,6 +8,7 @@ import { AddCircleOutline, CardGiftcard, EmojiEmotions, Gif } from '@mui/icons-m
 import { useAppSelector } from '../../app/hooks'
 import { Timestamp, CollectionReference, DocumentData, addDoc, collection, onSnapshot, serverTimestamp, query, orderBy } from 'firebase/firestore'
 import { db } from '../../firebase'
+import useChatCollection from '../../hooks/useChatCollection'
 
 interface Messages {
     timestamp: Timestamp,
@@ -23,27 +24,11 @@ interface Messages {
 const Chat = () => {
 
     const [text, setText] = useState<string>('')
-    const [messages, setMessages] = useState<Messages[]>([])
     const channelName = useAppSelector((state) => state.channel.channelName)
     const channelId = useAppSelector((state) => state.channel.channelId)
     const user = useAppSelector((state) => state.user.user)
+    const { chatDocuments: messages } = useChatCollection("channels", "messages")
 
-    useEffect(() => {
-        const collectionRef: CollectionReference<DocumentData> = collection(db, "channels", String(channelId), "messages")
-        //timestampでsortしたデータを変数に格納
-        const collectionRefOrderBy = query(collectionRef, orderBy("timestamp", "desc"))
-        onSnapshot(collectionRefOrderBy, (snapshot) => {
-            let res: Messages[] = [];
-            snapshot.docs.forEach((doc) => {
-                res.push({
-                    timestamp: doc.data().timestamp,
-                    message: doc.data().message,
-                    user: doc.data().user
-                })
-            })
-            setMessages(res)
-        })
-    }, [channelId])
 
     const sendMessage = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
